@@ -1,52 +1,69 @@
 # -*- coding: utf-8 -*-
 """
-Задание 5.1
+Задание 5.3
 
+Скрипт должен запрашивать у пользователя (в таком порядке):
+* информацию о режиме интерфейса (access/trunk)
+* номере интерфейса (тип и номер, вида Gi0/3)
+* номер VLANа (для режима trunk будет вводиться список VLANов)
 
-В задании создан словарь, с информацией о разных устройствах.
+В зависимости от выбранного режима, на стандартный поток вывода, должна возвращаться
+соответствующая конфигурация access или trunk (шаблоны команд находятся в переменных
+access_template и trunk_template).
 
-Необходимо запросить у пользователя ввод имени устройства (r1, r2 или sw1).
-И вывести информацию о соответствующем устройстве на стандартный поток вывода
-(информация будет в виде словаря).
+При этом, сначала должна идти строка interface и подставлен номер интерфейса, а затем
+соответствующий шаблон, в который подставлен номер VLANа (или список VLANов).
 
+Плюсом будет решить задание без использования условия if и цикла for,
+но первый вариант решения лучше сделать так, как будет получаться.
 
-Пример выполнения скрипта:
-$ python task_5_1.py
-Введите имя устройства: r1
-{'location': '21 New Globe Walk', 'vendor': 'Cisco', 'model': '4451', 'ios': '15.4', 'ip': '10.255.0.1'}
+Подсказка: в некоторых случаях словари можно использовать как замену if/elif/else.
 
-Ограничение: нельзя изменять словарь london_co.
+Ниже примеры выполнения скрипта, чтобы было проще понять задачу.
 
-Все задания надо выполнять используя только пройденные темы. То есть эту задачу можно
-решить без использования условия if.
+Пример выполнения скрипта, при выборе режима access:
+
+$ python task_5_3.py
+Введите режим работы интерфейса (access/trunk): access
+Введите тип и номер интерфейса: Fa0/6
+Введите номер влан(ов): 3
+
+interface Fa0/6
+switchport mode access
+switchport access vlan 3
+switchport nonegotiate
+spanning-tree portfast
+spanning-tree bpduguard enable
+
+Пример выполнения скрипта, при выборе режима trunk:
+$ python task_5_3.py
+Введите режим работы интерфейса (access/trunk): trunk
+Введите тип и номер интерфейса: Fa0/7
+Введите номер влан(ов): 2,3,4,5
+
+interface Fa0/7
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 2,3,4,5
+
 """
 
-london_co = {
-    "r1": {
-        "location": "21 New Globe Walk",
-        "vendor": "Cisco",
-        "model": "4451",
-        "ios": "15.4",
-        "ip": "10.255.0.1",
-    },
-    "r2": {
-        "location": "21 New Globe Walk",
-        "vendor": "Cisco",
-        "model": "4451",
-        "ios": "15.4",
-        "ip": "10.255.0.2",
-    },
-    "sw1": {
-        "location": "21 New Globe Walk",
-        "vendor": "Cisco",
-        "model": "3850",
-        "ios": "3.6.XE",
-        "ip": "10.255.0.101",
-        "vlans": "10,20,30",
-        "routing": True,
-    },
-}
+access_template = """switchport mode access
+switchport access vlan {}
+switchport nonegotiate
+spanning-tree portfast
+spanning-tree bpduguard enable
+"""
 
-device = input("Введите имя устройства: ")
+trunk_template = """switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan {}
+"""
+template = {"access": access_template, "trunk": trunk_template}
 
-print(london_co[device])
+mode = input("Введите режим работы интерфейса (access/trunk): ")
+interface = input("Введите тип и номер интерфейса: ")
+vlans = input("Введите номер влан(ов): ")
+
+print(f"interface {interface}")
+print(template[mode].format(vlans))

@@ -1,51 +1,35 @@
 # -*- coding: utf-8 -*-
 """
-Задание 5.1a
+Задание 5.3a
 
-Переделать скрипт из задания 5.1 таким образом, чтобы, кроме имени устройства,
-запрашивался также параметр устройства, который нужно отобразить.
+Дополнить скрипт из задания 5.3 таким образом, чтобы, в зависимости
+от выбранного режима, задавались разные вопросы в запросе о номере
+VLANа или списка VLANов:
+* для access: 'Введите номер VLAN:'
+* для trunk: 'Введите разрешенные VLANы:'
 
-Вывести информацию о соответствующем параметре, указанного устройства.
-
-Пример выполнения скрипта:
-$ python task_5_1a.py
-Введите имя устройства: r1
-Введите имя параметра: ios
-15.4
-
-Ограничение: нельзя изменять словарь london_co.
-
-Все задания надо выполнять используя только пройденные темы. То есть эту задачу можно
-решить без использования условия if.
+Плюсом будет решить задание без использования условия if и цикла for,
+но первый вариант решения лучше сделать так, как будет получаться.
 """
 
-london_co = {
-    "r1": {
-        "location": "21 New Globe Walk",
-        "vendor": "Cisco",
-        "model": "4451",
-        "ios": "15.4",
-        "ip": "10.255.0.1",
-    },
-    "r2": {
-        "location": "21 New Globe Walk",
-        "vendor": "Cisco",
-        "model": "4451",
-        "ios": "15.4",
-        "ip": "10.255.0.2",
-    },
-    "sw1": {
-        "location": "21 New Globe Walk",
-        "vendor": "Cisco",
-        "model": "3850",
-        "ios": "3.6.XE",
-        "ip": "10.255.0.101",
-        "vlans": "10,20,30",
-        "routing": True,
-    },
-}
+access_template = """switchport mode access
+switchport access vlan {}
+switchport nonegotiate
+spanning-tree portfast
+spanning-tree bpduguard enable
+"""
 
-device = input("Введите имя устройства: ")
-parameter = input("Введите имя параметра: ")
+trunk_template = """switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan {}
+"""
 
-print(london_co[device][parameter])
+template = {"access": access_template, "trunk": trunk_template}
+question = {"access": "Введите номер VLAN: ", "trunk": "Введите разрешенные VLANы: "}
+
+mode = input("Введите режим работы интерфейса (access/trunk): ")
+interface = input("Введите тип и номер интерфейса: ")
+vlans = input(question[mode])
+
+print("interface {}".format(interface))
+print(template[mode].format(vlans))
