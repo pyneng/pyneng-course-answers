@@ -2,19 +2,23 @@
 """
 Задание 4.2
 
-Преобразовать строку в переменной mac из формата XXXX:XXXX:XXXX
-в формат XXXX.XXXX.XXXX
-Полученную новую строку вывести на стандартный поток вывода (stdout) с помощью print.
+Если запустить код задания, будет такой вывод:
+$ python task_4_2.py
+ip nat inside source list ACL interface FastEthernet0/1 overload
 
-Ограничение: Все задания надо выполнять используя только пройденные темы.
+Надо преобразовать строку nat таким образом, чтобы на экран была выведена такая
+строка (заменен тип интерфейса с FastEthernet на GigabitEthernet и строка
+переведена в нижний регистр):
+
+$ python task_4_2.py
+ip nat inside source list acl interface gigabitethernet0/1 overload
 
 Предупреждение: в разделе 4 тесты можно легко "обмануть" сделав нужный вывод,
 без получения результатов из исходных данных с помощью Python.
 Это не значит, что задание сделано правильно, просто на данном этапе сложно иначе
 проверять результат.
+
 """
 
-mac = "AAAA:BBBB:CCCC"
-
-new_mac = mac.replace(":", ".")
-print(new_mac)
+nat = "ip nat inside source list ACL interface FastEthernet0/1 overload"
+print(nat)
