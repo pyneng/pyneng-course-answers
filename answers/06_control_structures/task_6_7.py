@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Задание 6.3
+Задание 6.7
 
 В скрипте сделан генератор конфигурации для access-портов.
 Сделать аналогичный генератор конфигурации для портов trunk.
@@ -16,7 +16,7 @@
 * ['del', '17'] - команда switchport trunk allowed vlan remove 17
 * ['only', '11', '30'] - команда switchport trunk allowed vlan 11,30
 
-Задача для портов 0/1, 0/2, 0/4:
+Задача для портов 0/1, 0/2, 0/4, 0/5, 0/7:
 - сгенерировать конфигурацию на основе шаблона trunk_template
 - с учетом ключевых слов add, del, only
 
@@ -25,20 +25,31 @@
 
 Для данных в словаре trunk_template вывод на
 стандартный поток вывода должен быть таким:
-interface FastEthernet 0/1
+interface FastEthernet0/1
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan add 10,20
-interface FastEthernet 0/2
+interface FastEthernet0/2
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan 11,30
-interface FastEthernet 0/4
+interface FastEthernet0/4
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan remove 17
+interface FastEthernet0/5
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan add 10,21
+interface FastEthernet0/7
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 30
 
-Ограничение: Все задания надо выполнять используя только пройденные темы.
+
+На стандартный поток вывода надо выводить только команды trunk настройки,
+а access закомментировать.
+
 """
 
 access_template = [
@@ -58,7 +69,7 @@ access = {"0/12": "10", "0/14": "11", "0/16": "17", "0/17": "150"}
 trunk = {"0/1": ["add", "10", "20"], "0/2": ["only", "11", "30"], "0/4": ["del", "17"]}
 
 for intf, value in trunk.items():
-    print(f"interface FastEthernet {intf}")
+    print(f"interface FastEthernet{intf}")
     for command in trunk_template:
         if command.endswith("allowed vlan"):
             action = value[0]
@@ -78,7 +89,7 @@ for intf, value in trunk.items():
 trunk_actions = {"add": " add", "del": " remove", "only": ""}
 
 for intf, value in trunk.items():
-    print(f"interface FastEthernet {intf}")
+    print(f"interface FastEthernet{intf}")
 
     for command in trunk_template:
         if command.endswith("allowed vlan"):
@@ -95,7 +106,7 @@ for intf, allowed in trunk.items():
     )
     vlans = ",".join(allowed[1:])
 
-    print(f"interface FastEthernet {intf}")
+    print(f"interface FastEthernet{intf}")
     for command in trunk_template:
         if command.endswith("allowed vlan"):
             print(f" {command}{action} {vlans}")
