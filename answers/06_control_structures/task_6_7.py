@@ -66,7 +66,13 @@ trunk_template = [
 ]
 
 access = {"0/12": "10", "0/14": "11", "0/16": "17", "0/17": "150"}
-trunk = {"0/1": ["add", "10", "20"], "0/2": ["only", "11", "30"], "0/4": ["del", "17"]}
+trunk = {
+    "0/1": ["add", "10", "20"],
+    "0/2": ["only", "11", "30"],
+    "0/4": ["del", "17"],
+    "0/5": ["add", "10", "21"],
+    "0/7": ["only", "30"],
+}
 
 for intf, value in trunk.items():
     print(f"interface FastEthernet{intf}")
