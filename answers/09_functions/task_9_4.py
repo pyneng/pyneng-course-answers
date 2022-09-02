@@ -2,80 +2,85 @@
 """
 Задание 9.4
 
-Создать функцию convert_config_to_dict, которая обрабатывает конфигурационный
-файл коммутатора и возвращает словарь:
-* Все команды верхнего уровня (глобального режима конфигурации), будут ключами.
-* Если у команды верхнего уровня есть подкоманды, они должны быть в значении
-  у соответствующего ключа, в виде списка (пробелы в начале строки надо удалить).
-* Если у команды верхнего уровня нет подкоманд, то значение будет пустым списком
+Создать функцию generate_access_config, которая генерирует конфигурацию
+для access-портов.
 
-У функции должен быть один параметр config_filename, который ожидает
-как аргумент имя конфигурационного файла.
+Функция ожидает такие аргументы:
 
-Проверить работу функции на примере файла config_sw1.txt
+- словарь с соответствием интерфейс-VLAN такого вида:
+    {'FastEthernet0/12': 10,
+     'FastEthernet0/14': 11,
+     'FastEthernet0/16': 17}
+- шаблон конфигурации access-портов в виде списка команд (список access_mode_template)
 
-При обработке конфигурационного файла, надо игнорировать строки, которые начинаются
-с '!', а также строки в которых содержатся слова из списка ignore.
+Функция должна возвращать список всех портов в режиме access с конфигурацией
+на основе шаблона access_mode_template. В конце строк в списке не должно быть
+символа перевода строки.
 
-Для проверки надо ли игнорировать строку, использовать функцию ignore_command.
+В этом задании заготовка для функции уже сделана и надо только продолжить писать
+само тело функции.
 
-Часть словаря, который должна возвращать функция (полный вывод можно посмотреть
-в тесте test_task_9_4.py):
-{
-    "version 15.0": [],
-    "service timestamps debug datetime msec": [],
-    "service timestamps log datetime msec": [],
-    "no service password-encryption": [],
-    "hostname sw1": [],
-    "interface FastEthernet0/0": [
-        "switchport mode access",
-        "switchport access vlan 10",
-    ],
-    "interface FastEthernet0/1": [
-        "switchport trunk encapsulation dot1q",
-        "switchport trunk allowed vlan 100,200",
-        "switchport mode trunk",
-    ],
-    "interface FastEthernet0/2": [
-        "switchport mode access",
-        "switchport access vlan 20",
-    ],
-}
+
+Пример итогового списка (перевод строки после каждого элемента сделан
+для удобства чтения):
+[
+'interface FastEthernet0/12',
+'switchport mode access',
+'switchport access vlan 10',
+'switchport nonegotiate',
+'spanning-tree portfast',
+'spanning-tree bpduguard enable',
+'interface FastEthernet0/17',
+'switchport mode access',
+'switchport access vlan 150',
+'switchport nonegotiate',
+'spanning-tree portfast',
+'spanning-tree bpduguard enable',
+...]
+
+Проверить работу функции на примере словаря access_config
+и списка команд access_mode_template.
+Если предыдущая проверка прошла успешно, проверить работу функции еще раз на словаре
+access_config_2 и убедиться, что в итоговом списке правильные номера интерфейсов
+и вланов.
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
+
 """
 
-ignore = ["duplex", "alias", "configuration"]
+access_mode_template = [
+    "switchport mode access",
+    "switchport access vlan",
+    "switchport nonegotiate",
+    "spanning-tree portfast",
+    "spanning-tree bpduguard enable",
+]
+
+access_config = {"FastEthernet0/12": 10, "FastEthernet0/14": 11, "FastEthernet0/16": 17}
+
+access_config_2 = {
+    "FastEthernet0/03": 100,
+    "FastEthernet0/07": 101,
+    "FastEthernet0/09": 107,
+}
 
 
-def ignore_command(command, ignore):
+def generate_access_config(intf_vlan_mapping, access_template):
     """
-    Функция проверяет содержится ли в команде слово из списка ignore.
+    intf_vlan_mapping - словарь с соответствием интерфейс-VLAN такого вида:
+        {'FastEthernet0/12':10,
+         'FastEthernet0/14':11,
+         'FastEthernet0/16':17}
+    access_template - список команд для порта в режиме access
 
-    command - строка. Команда, которую надо проверить
-    ignore - список. Список слов
-
-    Возвращает
-    * True, если в команде содержится слово из списка ignore
-    * False - если нет
+    Возвращает список всех портов в режиме access с конфигурацией на основе шаблона
     """
-    ignore_status = False
-    for word in ignore:
-        if word in command:
-            ignore_status = True
-    return ignore_status
-
-
-def convert_config_to_dict(config_filename):
-    config_dict = {}
-    with open(config_filename) as f:
-        for line in f:
-            line = line.rstrip()
-            if line and not (line.startswith("!") or ignore_command(line, ignore)):
-                if line[0].isalnum():
-                    section = line
-                    config_dict[section] = []
-                else:
-                    config_dict[section].append(line.strip())
-    return config_dict
-
+    access_config = []
+    for intf, vlan in intf_vlan_mapping.items():
+        access_config.append(f"interface {intf}")
+        for command in access_template:
+            if command.endswith("access vlan"):
+                access_config.append(f"{command} {vlan}")
+            else:
+                access_config.append(command)
+    return access_config
