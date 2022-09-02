@@ -17,7 +17,7 @@
 """
 from sys import argv
 
-ignore = ["duplex", "alias", "configuration"]
+ignore = ["duplex", "alias", "configuration", "end", "service"]
 
 src_file, dst_file = argv[1], argv[2]
 

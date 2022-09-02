@@ -17,7 +17,7 @@
 """
 from sys import argv
 
-ignore = ["duplex", "alias", "configuration"]
+ignore = ["duplex", "alias", "configuration", "end", "service"]
 
 filename = argv[1]
 
