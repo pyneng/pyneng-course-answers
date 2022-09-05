@@ -2,7 +2,7 @@
 """
 Задание 9.4
 
-Создать функцию generate_access_config, которая генерирует конфигурацию
+Создать функцию generate_access_dict, которая генерирует конфигурацию
 для access-портов.
 
 Функция ожидает такие аргументы:
@@ -11,76 +11,85 @@
     {'FastEthernet0/12': 10,
      'FastEthernet0/14': 11,
      'FastEthernet0/16': 17}
-- шаблон конфигурации access-портов в виде списка команд (список access_mode_template)
+- шаблон конфигурации access-портов в виде списка команд (список access_cmd_list)
 
 Функция должна возвращать список всех портов в режиме access с конфигурацией
-на основе шаблона access_mode_template. В конце строк в списке не должно быть
+на основе шаблона access_cmd_list. В конце строк в списке не должно быть
 символа перевода строки.
 
-В этом задании заготовка для функции уже сделана и надо только продолжить писать
-само тело функции.
+Проверить работу функции на примере словаря access_dict и списка команд
+access_cmd_list.  Если предыдущая проверка прошла успешно, проверить работу
+функции еще раз на словаре access_dict_2 и списке команд cmd_list и убедиться,
+что в итоговом списке правильные номера интерфейсов и вланов.
 
+Пример работы функции
 
-Пример итогового списка (перевод строки после каждого элемента сделан
-для удобства чтения):
-[
-'interface FastEthernet0/12',
-'switchport mode access',
-'switchport access vlan 10',
-'switchport nonegotiate',
-'spanning-tree portfast',
-'spanning-tree bpduguard enable',
-'interface FastEthernet0/17',
-'switchport mode access',
-'switchport access vlan 150',
-'switchport nonegotiate',
-'spanning-tree portfast',
-'spanning-tree bpduguard enable',
-...]
+In [4]: generate_access_dict(access_dict, cmd_list)
+Out[4]:
+['interface FastEthernet0/12',
+ 'switchport mode access',
+ 'switchport access vlan 10',
+ 'interface FastEthernet0/14',
+ 'switchport mode access',
+ 'switchport access vlan 11']
 
-Проверить работу функции на примере словаря access_config
-и списка команд access_mode_template.
-Если предыдущая проверка прошла успешно, проверить работу функции еще раз на словаре
-access_config_2 и убедиться, что в итоговом списке правильные номера интерфейсов
-и вланов.
+In [6]: generate_access_config(access_dict_2, access_cmd_list)
+Out[6]:
+['interface FastEthernet0/3',
+ 'switchport mode access',
+ 'switchport access vlan 100',
+ 'switchport nonegotiate',
+ 'spanning-tree portfast',
+ 'spanning-tree bpduguard enable',
+ 'interface FastEthernet0/7',
+ 'switchport mode access',
+ 'switchport access vlan 101',
+ 'switchport nonegotiate',
+ 'spanning-tree portfast',
+ 'spanning-tree bpduguard enable',
+ 'interface FastEthernet0/9',
+ 'switchport mode access',
+ 'switchport access vlan 107',
+ 'switchport nonegotiate',
+ 'spanning-tree portfast',
+ 'spanning-tree bpduguard enable',
+ 'interface FastEthernet0/10',
+ 'switchport mode access',
+ 'switchport access vlan 111',
+ 'switchport nonegotiate',
+ 'spanning-tree portfast',
+ 'spanning-tree bpduguard enable']
+
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+access_dict = {"FastEthernet0/12": 10, "FastEthernet0/14": 11}
+access_dict_2 = {
+    "FastEthernet0/3": 100,
+    "FastEthernet0/7": 101,
+    "FastEthernet0/9": 107,
+    "FastEthernet0/10": 111,
+}
 
-access_mode_template = [
+access_cmd_list = [
     "switchport mode access",
     "switchport access vlan",
     "switchport nonegotiate",
     "spanning-tree portfast",
     "spanning-tree bpduguard enable",
 ]
-
-access_config = {"FastEthernet0/12": 10, "FastEthernet0/14": 11, "FastEthernet0/16": 17}
-
-access_config_2 = {
-    "FastEthernet0/03": 100,
-    "FastEthernet0/07": 101,
-    "FastEthernet0/09": 107,
-}
+cmd_list = ["switchport mode access", "switchport access vlan"]
 
 
-def generate_access_config(intf_vlan_mapping, access_template):
-    """
-    intf_vlan_mapping - словарь с соответствием интерфейс-VLAN такого вида:
-        {'FastEthernet0/12':10,
-         'FastEthernet0/14':11,
-         'FastEthernet0/16':17}
-    access_template - список команд для порта в режиме access
 
-    Возвращает список всех портов в режиме access с конфигурацией на основе шаблона
-    """
-    access_config = []
-    for intf, vlan in intf_vlan_mapping.items():
-        access_config.append(f"interface {intf}")
+def generate_access_dict(intf_vlan_dict, access_template):
+    access_dict = []
+    for intf, vlan in intf_vlan_dict.items():
+        access_dict.append(f"interface {intf}")
         for command in access_template:
             if command.endswith("access vlan"):
-                access_config.append(f"{command} {vlan}")
+                access_dict.append(f"{command} {vlan}")
             else:
-                access_config.append(command)
-    return access_config
+                access_dict.append(command)
+    return access_dict
