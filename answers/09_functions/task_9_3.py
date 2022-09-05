@@ -95,6 +95,6 @@ def clean_config(config_filename, ignore_lines):
             if line.startswith("!") or ignore_line(line, ignore_lines):
                 pass
             else:
-                cfg_list.append(line.strip())
+                cfg_list.append(line.rstrip())
     return cfg_list
 
