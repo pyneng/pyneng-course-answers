@@ -17,6 +17,19 @@ Reachable    Unreachable
 10.1.1.2     10.1.1.8
              10.1.1.9
 
+Пример вызова функции
+
+In [6]: reach_ip = ["10.1.1.1", "10.1.1.2"]
+
+In [7]: unreach_ip = ["10.1.1.7", "10.1.1.8", "10.1.1.9"]
+
+In [8]: print_ip_table(reach_ip, unreach_ip)
+Reachable    Unreachable
+-----------  -------------
+10.1.1.1     10.1.1.7
+10.1.1.2     10.1.1.8
+             10.1.1.9
+
 """
 from tabulate import tabulate
 

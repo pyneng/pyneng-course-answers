@@ -16,7 +16,6 @@ data = ["a", "100", "30", 10.5, 20, "test", "15", 100]
 """
 
 data = ["a", "100", "30", 10.5, 20, "test", "15", 100]
-print(data)
 result = []
 for item in data:
     try:
