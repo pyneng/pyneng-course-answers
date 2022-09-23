@@ -37,11 +37,11 @@ else:
 if not correct_ip:
     print("Неправильный IP-адрес")
 else:
-    octets_num = [int(i) for i in octets]
+    octet0 = int(octets[0])
 
-    if octets_num[0] in range(1, 224):
+    if octet0 in range(1, 224):
         print("unicast")
-    elif octets_num[0] in range(224, 240):
+    elif octet0 in range(224, 240):
         print("multicast")
     elif ip_address == "255.255.255.255":
         print("local broadcast")

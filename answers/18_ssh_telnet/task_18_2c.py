@@ -77,7 +77,7 @@ def send_config_commands(device, config_commands, log=True):
     regex = "% (?P<errmsg>.+)"
 
     if log:
-        print("Подключаюсь к {}...".format(device["host"]))
+        print(f"Подключаюсь к {device['host']}...")
     with ConnectHandler(**device) as ssh:
         ssh.enable()
         for command in config_commands:

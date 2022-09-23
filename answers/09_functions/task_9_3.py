@@ -92,9 +92,7 @@ def clean_config(config_filename, ignore_lines):
     cfg_list = []
     with open(config_filename) as f:
         for line in f:
-            if line.startswith("!") or ignore_line(line, ignore_lines):
-                pass
-            else:
+            if "!" not in line and not ignore_line(line, ignore_lines):
                 cfg_list.append(line.rstrip())
     return cfg_list
 

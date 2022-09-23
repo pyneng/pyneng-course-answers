@@ -14,13 +14,13 @@ while True:
     octets = ip_address.split(".")
     correct_ip = True
 
-    if len(octets) == 4:
-        for octet in octets:
-            if not (octet.isdigit() and int(octet) in range(256)):
-                correct_ip = False
-                break
-    else:
+    if len(octets) != 4:
         correct_ip = False
+        continue
+    for octet in octets:
+        if not (octet.isdigit() and int(octet) in range(256)):
+            correct_ip = False
+            break
     if correct_ip:
         break
     print("Неправильный IP-адрес")
