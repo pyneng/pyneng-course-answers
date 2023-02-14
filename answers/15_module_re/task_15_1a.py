@@ -34,6 +34,5 @@ def get_ip_from_cfg(config):
             r" ip address (?P<ip>\S+) (?P<mask>\S+)"
         )
         match = regex.finditer(f.read())
-
     result = {m.group("intf"): m.group("ip", "mask") for m in match}
     return result

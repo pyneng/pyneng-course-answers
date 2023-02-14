@@ -10,9 +10,9 @@ def create_db(db_name, schema):
     print("Создаю базу данных...")
     with open(schema, "r") as f:
         schema_f = f.read()
-        connection = sqlite3.connect(db_name)
-        connection.executescript(schema_f)
-        connection.close()
+    connection = sqlite3.connect(db_name)
+    connection.executescript(schema_f)
+    connection.close()
 
 
 if __name__ == "__main__":

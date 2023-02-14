@@ -47,7 +47,7 @@ def write_dhcp_snooping_to_csv(filenames, output):
                 for line in f:
                     match = re.search(regex, line)
                     if match:
-                        writer.writerow((switch,) + match.groups())
+                        writer.writerow([switch, *match.groups()])
 
 
 if __name__ == "__main__":

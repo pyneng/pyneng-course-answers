@@ -130,13 +130,17 @@ def send_cfg_commands(device, commands):
 def send_commands_to_devices(devices, filename, *, show=None, config=None, limit=3):
     if show and config:
         raise ValueError("Можно передавать только один из аргументов show/config")
-    command = show if show else config
-    function = send_show_command if show else send_cfg_commands
+    elif show is None and config is None:
+        raise ValueError("Нужно передать один из аргументов show/config")
 
     with ThreadPoolExecutor(max_workers=limit) as executor:
-        futures = [executor.submit(function, device, command) for device in devices]
+        if show:
+            futures = [executor.submit(send_show_command, device, show) for device in devices]
+        elif config:
+            futures = [executor.submit(send_cfg_commands, device, config) for device in devices]
+
         with open(filename, "w") as f:
-            for future in as_completed(futures):
+            for future in futures:
                 f.write(future.result())
 
 
