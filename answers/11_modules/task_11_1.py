@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 def convert_mac(mac_address):
     msg = f"'{mac_address}' does not appear to be a MAC address"
     mac = mac_address.strip()

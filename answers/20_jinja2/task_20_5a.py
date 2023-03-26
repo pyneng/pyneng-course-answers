@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 import re
 
 import yaml
-from netmiko import ConnectHandler
+from netmiko import Netmiko
 from task_20_5 import create_vpn_config
 
 
@@ -21,7 +20,7 @@ def get_free_tunnel_number(src, dst):
 def configure_vpn(
     src_device_params, dst_device_params, src_template, dst_template, vpn_data_dict
 ):
-    with ConnectHandler(**src_device_params) as src, ConnectHandler(
+    with Netmiko(**src_device_params) as src, Netmiko(
         **dst_device_params
     ) as dst:
         src.enable()
