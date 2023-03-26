@@ -10,7 +10,7 @@ def get_free_tunnel_number(src, dst):
     nums = [int(num) for num in re.findall(r"Tunnel(\d+)", src + dst)]
     if not nums:
         return 0
-    diff = set(range(min(nums), max(nums) + 1)) - set(nums)
+    diff = set(range(0, max(nums) + 1)) - set(nums)
     if diff:
         return min(diff)
     else:
